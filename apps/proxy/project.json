@@ -10,7 +10,7 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/proxy",
+        "outputPath": "apps/proxy/dist",
         "format": ["cjs"],
         "bundle": false,
         "main": "apps/proxy/src/main.ts",
@@ -43,10 +43,12 @@
       },
       "configurations": {
         "development": {
-          "buildTarget": "proxy:build:development"
+          "buildTarget": "proxy:build:development",
+          "watch": true
         },
         "production": {
-          "buildTarget": "proxy:build:production"
+          "buildTarget": "proxy:build:production",
+          "watch": false
         }
       }
     },

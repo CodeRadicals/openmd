@@ -28,6 +28,7 @@
         "no-restricted-syntax": "off",
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/ban-types": "error",
+        "unicorn/no-null": "off",
         "unicorn/prevent-abbreviations": [
           "error",
           {

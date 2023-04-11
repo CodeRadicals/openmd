@@ -5,7 +5,7 @@ import { EnvSchemaType } from './env';
 
 export const createLoggerMiddleware = (env: EnvSchemaType) =>
   pinoHttp({
-    logger: pino(),
+    logger: pino(logtailTransport(env)),
     level: env.NODE_ENV === 'production' ? 'info' : 'debug',
     customLogLevel: function (_, res, error) {
       if (res.statusCode >= 400 && res.statusCode < 500) {
@@ -27,6 +27,17 @@ export const createLoggerMiddleware = (env: EnvSchemaType) =>
       return reqMessage(`${res.statusCode} ${res.statusMessage}`, req);
     },
   });
+
+const logtailTransport = (env: EnvSchemaType) => {
+  if (env.LOGTAIL_SOURCE_TOKEN === null) {
+    return;
+  }
+
+  return pino.transport({
+    target: '@logtail/pino',
+    options: { sourceToken: env.LOGTAIL_SOURCE_TOKEN },
+  });
+};
 
 const reqMessage = (message: string, req: IncomingMessage) =>
   `[${req.method}] ${req.url} : ${message}`;

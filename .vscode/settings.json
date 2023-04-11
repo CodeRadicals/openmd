@@ -5,5 +5,5 @@
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
   },
-  "cSpell.words": ["cacheable", "nrwl", "openmd", "pino"]
+  "cSpell.words": ["cacheable", "LOGTAIL", "nrwl", "openmd", "pino"]
 }

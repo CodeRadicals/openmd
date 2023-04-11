@@ -10,7 +10,7 @@ export const parseEnv = (env: typeof process.env) => {
     throw new Error(
       `❌ Invalid environment variables: ${JSON.stringify(
         parsedEnv.error.format(),
-        undefined,
+        null,
         4
       )}`
     );
@@ -31,6 +31,7 @@ export const envSchema = z.object({
   OAUTH_APP_CLIENT_ID: z.string(),
   OAUTH_APP_SECRET: z.string(),
   OAUTH_APP_SCOPES: withDevDefault(z.string(), '').transform(stringToArray),
+  LOGTAIL_SOURCE_TOKEN: withDevDefault(z.string().nullable(), null),
   npm_package_version: z.string(),
 });
 export type EnvSchemaType = z.infer<typeof envSchema>;

@@ -14,7 +14,8 @@ function run() {
   const app = express();
 
   app.use(loggerMiddleware);
-  app.get('/auth', proxyErrorHandler(proxyApi.auth));
+  app.post('/auth', proxyErrorHandler(proxyApi.auth));
+  app.get('/redirect', proxyErrorHandler(proxyApi.redirect));
   app.get('/', async (_, res) => {
     res.send({ version: env.npm_package_version });
   });

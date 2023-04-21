@@ -1,4 +1,9 @@
 import { NextFunction, Request, RequestHandler, Response } from 'express';
+import { ZodError } from 'zod';
+import {
+  ErrorMessageOptions as ZodErrorMessageOptions,
+  generateErrorMessage as generateZodErrorMessage,
+} from 'zod-error';
 
 export class ProxyError extends Error {
   constructor(public code: number, message: string) {
@@ -24,16 +29,38 @@ export const proxyErrorHandler =
     try {
       await call(req, res, next);
     } catch (error) {
-      console.log('catch');
-      const proxyError =
-        error instanceof ProxyError
-          ? error
-          : new ProxyError(500, error.message);
+      let proxyError: ProxyError;
+
+      if (error instanceof ProxyError) {
+        proxyError = error;
+      } else if (error instanceof ZodError) {
+        proxyError = new ProxyError(
+          400,
+          generateZodErrorMessage(error.errors, options)
+        );
+      } else {
+        proxyError = new ProxyError(500, (error as Error).message);
+      }
+
       res.status(proxyError.code);
-      res.statusMessage = proxyError.message;
       res.send(proxyError.toJSON());
     }
   };
+
+const options: ZodErrorMessageOptions = {
+  maxErrors: 1,
+  path: {
+    type: 'objectNotation',
+    enabled: true,
+    transform: ({ value }) => value,
+  },
+  message: {
+    enabled: true,
+    transform: ({ value }) => value.toLowerCase(),
+  },
+  transform: ({ pathComponent, messageComponent }) =>
+    `bad request param \`${pathComponent}\` (${messageComponent})`,
+};
 
 interface ProxyErrorJSON {
   statusCode: number;

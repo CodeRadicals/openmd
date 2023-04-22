@@ -1,3 +1,5 @@
+import { config as injectDotEnv } from 'dotenv';
+import * as fs from 'node:fs';
 import { z } from 'zod';
 import { parseURL } from './helpers/parse-url';
 import { stringToArray } from './helpers/string-to-array';
@@ -17,6 +19,20 @@ export const parseEnv = (env: typeof process.env) => {
   }
 
   return parsedEnv.data;
+};
+
+export const injectEnv = () => {
+  //inject dot env variables
+  injectDotEnv();
+
+  if (!process.env.npm_package_version) {
+    //read package json file
+    const packageJson = fs.readFileSync('./package.json', 'utf8');
+    const { version } = JSON.parse(packageJson);
+
+    //inject npm_package_version env variable
+    process.env.npm_package_version = version;
+  }
 };
 
 export const envSchema = z.object({

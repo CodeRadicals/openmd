@@ -1,6 +1,5 @@
-import { config as injectEnv } from 'dotenv';
 import express from 'express';
-import { parseEnv } from './lib/env';
+import { injectEnv, parseEnv } from './lib/env';
 import { proxyErrorHandler } from './lib/error';
 import { createLoggerMiddleware } from './lib/logger';
 import { createProxyApi } from './lib/proxy';

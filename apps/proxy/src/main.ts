@@ -15,6 +15,7 @@ function run() {
   app.use(loggerMiddleware);
   app.post('/auth', proxyErrorHandler(proxyApi.auth));
   app.get('/redirect', proxyErrorHandler(proxyApi.redirect));
+  app.get('/status', proxyErrorHandler(proxyApi.status));
   app.get('/', async (_, res) => {
     res.send({ version: env.npm_package_version });
   });

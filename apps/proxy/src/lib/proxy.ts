@@ -24,6 +24,20 @@ export const createProxyApi = (env: EnvSchemaType) => ({
 
     res.status(302).redirect(redirectUrl.href);
   },
+  async status(_: Request, res: Response) {
+    const result = {
+      statusCode: 200,
+      statusMessage: 'OK',
+      timestamp: Date.now(),
+      uptime: process.uptime(),
+      hrtime: process.hrtime(),
+    };
+    try {
+      res.send(result);
+    } catch {
+      throw new ProxyError(503, 'service unavailable');
+    }
+  },
 });
 
 const authenticate = async (code: string, env: EnvSchemaType) => {
